@@ -27,11 +27,13 @@ body {
 
 .breaking-bg {
     position: absolute;
-    inset: 0;
+    top: -180px; left: 0; right: 0; bottom: 0;
+    height: calc(100% + 180px);
     background:
         linear-gradient(45deg, rgba(255,30,30,0.25) 0%, transparent 60%),
         repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.04) 50px, rgba(255,255,255,0.04) 100px);
     animation: scanlines 3.5s linear infinite;
+    will-change: transform;
     opacity: 0.85;
 }
 
@@ -57,8 +59,8 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     -webkit-text-stroke: 2px #000;
-    animation: metallicShine 1.8s linear infinite, introPop 4.2s ease-out forwards;
-    transform-style: preserve-3d;
+    animation: introPop 4.2s ease-out forwards;
+    will-change: transform;
 }
 
 .breaking-line {
@@ -208,11 +210,6 @@ body {
     50%      { opacity: 0.3; transform: scale(0.7); }
 }
 
-@keyframes metallicShine {
-    0%, 100% { filter: brightness(1.15) saturate(1.4); }
-    50%      { filter: brightness(2.3) saturate(2.1); }
-}
-
 @keyframes introPop {
     0%   { transform: perspective(1400px) rotateX(35deg) rotateY(-25deg) scale(0.65); opacity: 0; }
     25%  { transform: perspective(1400px) rotateX(12deg) rotateY(12deg) scale(1.08); opacity: 1; }
@@ -221,8 +218,8 @@ body {
 }
 
 @keyframes scanlines {
-    0%   { background-position: 0 0; }
-    100% { background-position: 0 180px; }
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(180px); }
 }
 
 @keyframes linePulse {
