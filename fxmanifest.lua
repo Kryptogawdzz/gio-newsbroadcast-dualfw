@@ -29,6 +29,5 @@ files {
 
 ui_page 'html/index.html'
 
-dependencies {
-    'ox_lib'
-}
+-- ox_lib is used for QBox notifications but is NOT listed as a hard dependency
+-- because ESX servers may run without it. Availability is checked at runtime.

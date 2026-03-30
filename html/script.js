@@ -1,15 +1,33 @@
-let hideTimeout = null;
+// ── DOM CACHE ────────────────────────────────────────────────────────────────
+// Resolved once at load; never queried again on hot paths.
+const intro    = document.getElementById('breakingIntro');
+const ticker   = document.getElementById('ticker');
+const headerEl = document.getElementById('header-text');
+const track    = document.getElementById('track');
+const labelEl  = document.getElementById('ticker-label');
+
+// Three tracked timeout handles — all cancelled on each new announcement
+// to prevent stale chains from previous cycles interfering (#2)
+let hideTimeout  = null;
+let introTimeout = null;
+let fadeTimeout  = null;
+
+function cancelAllTimeouts() {
+    if (hideTimeout)  { clearTimeout(hideTimeout);  hideTimeout  = null; }
+    if (introTimeout) { clearTimeout(introTimeout); introTimeout = null; }
+    if (fadeTimeout)  { clearTimeout(fadeTimeout);  fadeTimeout  = null; }
+}
 
 window.addEventListener('message', function(event) {
     const data = event.data;
 
+    // Guard: ignore null, non-object, or action-less messages
+    if (!data || typeof data.action !== 'string') return;
+
     // ── SHOW TICKER ──────────────────────────────────────────────────────────
     if (data.action === 'showTicker') {
-        const intro     = document.getElementById('breakingIntro');
-        const ticker    = document.getElementById('ticker');
-        const headerEl  = document.getElementById('header-text');
-        const track     = document.getElementById('track');
-        const labelEl   = document.getElementById('ticker-label');
+        // Cancel ALL pending timers from any prior announcement cycle (#2)
+        cancelAllTimeouts();
 
         // Apply dynamic color from config
         const color = data.color || '#cc0000';
@@ -23,9 +41,10 @@ window.addEventListener('message', function(event) {
         ticker.classList.remove('bottom', 'top');
         ticker.classList.add(data.position || 'bottom');
 
-        // Build ticker items — repeat 6x for seamless loop
+        // Hoist loop constants — evaluated once, not 6x (#6)
         const fullMessage = `${data.subheader || ''} — ${data.message || ''}`;
-        track.innerHTML = '';
+        const headerText  = data.header || 'ALERT';
+        const fragment    = document.createDocumentFragment();
 
         for (let i = 0; i < 6; i++) {
             const item = document.createElement('span');
@@ -34,7 +53,7 @@ window.addEventListener('message', function(event) {
             const tag = document.createElement('span');
             tag.className = 'tag';
             tag.style.background = color;
-            tag.textContent = data.header || 'ALERT';
+            tag.textContent = headerText;
 
             const text = document.createTextNode('\u00A0' + fullMessage + '\u00A0');
 
@@ -45,8 +64,12 @@ window.addEventListener('message', function(event) {
             item.appendChild(tag);
             item.appendChild(text);
             item.appendChild(sep);
-            track.appendChild(item);
+            fragment.appendChild(item);
         }
+
+        // Single DOM write
+        track.innerHTML = '';
+        track.appendChild(fragment);
 
         // Apply scroll speed from config, then reset animation so it starts fresh
         const scrollSpeed = (data.scrollSpeed || 35) + 's';
@@ -59,36 +82,32 @@ window.addEventListener('message', function(event) {
         intro.classList.remove('hidden', 'fade-out');
 
         const introDuration = data.introDuration || 4600;
+        const displayTime   = data.showFor || 0;
 
-        // Fade intro out, then show ticker
-        setTimeout(() => {
+        // Tracked timeout chain — cancellable at any point (#2)
+        introTimeout = setTimeout(() => {
+            introTimeout = null;
             intro.classList.add('fade-out');
 
-            setTimeout(() => {
+            fadeTimeout = setTimeout(() => {
+                fadeTimeout = null;
                 intro.classList.add('hidden');
                 ticker.classList.add('visible');
 
-                // Auto-hide if ShowFor > 0
-                if (hideTimeout) clearTimeout(hideTimeout);
-                const displayTime = data.showFor || 0;
                 if (displayTime > 0) {
                     hideTimeout = setTimeout(() => {
+                        hideTimeout = null;
                         ticker.classList.remove('visible');
                     }, displayTime);
                 }
-            }, 650);
+            }, 650); // must match CSS fade-out transition on .breaking-intro
         }, introDuration);
     }
 
     // ── CLEAR TICKER ─────────────────────────────────────────────────────────
     if (data.action === 'clearTicker') {
-        const ticker = document.getElementById('ticker');
-        const intro  = document.getElementById('breakingIntro');
+        cancelAllTimeouts();
         ticker.classList.remove('visible');
         intro.classList.add('hidden');
-        if (hideTimeout) {
-            clearTimeout(hideTimeout);
-            hideTimeout = null;
-        }
     }
 });

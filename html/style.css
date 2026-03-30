@@ -1,3 +1,7 @@
+:root {
+    --brand-color: #cc0000;  /* Single source of truth — change here to retheme */
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -92,7 +96,7 @@ body {
 
 /* Red broadcast label — CNN/Fox style */
 .ticker-label {
-    background: #cc0000;
+    background: var(--brand-color);
     color: #ffffff;
     padding: 0 28px;
     display: flex;
@@ -143,8 +147,8 @@ body {
     background: #0a0a0a;
     display: flex;
     align-items: center;
-    border-top: 3px solid #cc0000;
-    border-bottom: 3px solid #cc0000;
+    border-top: 3px solid var(--brand-color);
+    border-bottom: 3px solid var(--brand-color);
 }
 
 .ticker-track {
@@ -175,7 +179,7 @@ body {
 
 /* Category pill before each headline */
 .ticker-item .tag {
-    background: #cc0000;
+    background: var(--brand-color);
     color: #ffffff;
     font-family: Arial, sans-serif;
     font-size: 0.82rem;
@@ -190,7 +194,7 @@ body {
 
 /* Separator between repeated items */
 .ticker-item .sep {
-    color: #cc0000;
+    color: var(--brand-color);
     font-size: 1.8rem;
     margin: 0 35px;
     line-height: 1;
