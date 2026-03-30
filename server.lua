@@ -1,13 +1,14 @@
 -- ============================================================
 --  gio-newsbroadcast | server.lua
 --  Framework: Auto-detects ESX or QBox at resource start
---  Version: 1.5.0
+--  Version: 1.5.1
 -- ============================================================
 
 local ESX              = nil
 local QBX              = nil
 local Framework        = nil
-local AnnouncementTypes = nil  -- cached after Config loads
+local OxLibAvailable   = false  -- resolved once at startup; avoids per-call GetResourceState
+local AnnouncementTypes = nil   -- cached after Config loads
 
 -- ── FRAMEWORK DETECTION ──────────────────────────────────────
 if GetResourceState('es_extended') == 'started' then
@@ -24,6 +25,7 @@ else
     print('^1[gio-newsbroadcast] ^7ERROR: Neither ESX nor QBox detected! Commands will not work.')
 end
 
+OxLibAvailable  = GetResourceState('ox_lib') == 'started'
 AnnouncementTypes = Config.AnnouncementTypes
 
 -- ── NOTIFICATION BRIDGE ──────────────────────────────────────
@@ -33,7 +35,7 @@ local function Notify(source, message)
     if source == 0 then return end  -- console has no client UI
     if Framework == 'ESX' then
         TriggerClientEvent('esx:showNotification', source, '~r~' .. message)
-    elseif Framework == 'QBOX' and GetResourceState('ox_lib') == 'started' then
+    elseif Framework == 'QBOX' and OxLibAvailable then
         TriggerClientEvent('ox_lib:notify', source, {
             type        = 'error',
             title       = 'Error',
@@ -61,8 +63,9 @@ local function GetPlayerJobData(source)
     elseif Framework == 'QBOX' and QBX then
         local Player = QBX:GetPlayer(source)
         if not Player then return nil, nil end
-        return Player.PlayerData.job.name,
-               Player.PlayerData.job.grade.level
+        local jobData = Player.PlayerData.job
+        if not jobData or not jobData.grade then return nil, nil end
+        return jobData.name, jobData.grade.level
     end
 
     return nil, nil
@@ -137,7 +140,7 @@ RegisterCommand('announce', function(source, args)
             type      = announceType
         })
         print(string.format('^2[gio-newsbroadcast] ^7[CONSOLE] %s announcement: %s',
-            announceType:upper(), message:gsub('%^%d', '')))
+            announceType:upper(), message:gsub('%^[%d%*]', '')))
         return
     end
 
@@ -198,7 +201,7 @@ RegisterCommand('announce', function(source, args)
 
     -- Strip FiveM color codes from message before logging to prevent log spoofing
     print(string.format('^2[gio-newsbroadcast] ^7[%s] %s announcement from %s: %s',
-        Framework, announceType:upper(), GetPlayerName(source), message:gsub('%^%d', '')))
+        Framework, announceType:upper(), GetPlayerName(source), message:gsub('%^[%d%*]', '')))
 end, false)
 
 -- ── /clearticker COMMAND ──────────────────────────────────────

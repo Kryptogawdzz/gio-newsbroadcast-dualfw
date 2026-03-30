@@ -13,12 +13,13 @@ TriggerEvent('chat:addSuggestion', '/clearticker', 'Clear the news ticker for al
 
 -- ── NET EVENTS ────────────────────────────────────────────────
 RegisterNetEvent('gio-news:showAnnouncement', function(data)
+    -- Nil-coalesce all server-supplied fields so the NUI never receives null values
     SendNUIMessage({
         action        = 'showTicker',
-        header        = data.header,
-        subheader     = data.subheader,
-        color         = data.color,
-        message       = data.message,
+        header        = data.header    or 'NEWS',
+        subheader     = data.subheader or '',
+        color         = data.color     or '#cc0000',
+        message       = data.message   or '',
         showFor       = Config.ShowFor,
         introDuration = Config.IntroDuration,
         scrollSpeed   = Config.ScrollSpeed,

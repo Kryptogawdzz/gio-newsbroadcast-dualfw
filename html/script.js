@@ -67,9 +67,8 @@ window.addEventListener('message', function(event) {
             fragment.appendChild(item);
         }
 
-        // Single DOM write
-        track.innerHTML = '';
-        track.appendChild(fragment);
+        // Atomic DOM swap — clears children and appends in one call (replaceChildren, Chromium 86+)
+        track.replaceChildren(fragment);
 
         // Apply scroll speed from config, then reset animation so it starts fresh
         const scrollSpeed = (data.scrollSpeed || 35) + 's';
@@ -102,10 +101,9 @@ window.addEventListener('message', function(event) {
                 }
             }, 650); // must match CSS fade-out transition on .breaking-intro
         }, introDuration);
-    }
 
     // ── CLEAR TICKER ─────────────────────────────────────────────────────────
-    if (data.action === 'clearTicker') {
+    } else if (data.action === 'clearTicker') {
         cancelAllTimeouts();
         ticker.classList.remove('visible');
         intro.classList.add('hidden');
