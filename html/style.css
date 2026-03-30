@@ -1,0 +1,231 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Impact', 'Arial Black', system-ui, sans-serif;
+    overflow: hidden;
+    background: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* ==================== BREAKING NEWS INTRO ==================== */
+.breaking-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #4a0000, #000000);
+    overflow: hidden;
+    transition: opacity 0.6s ease;
+}
+
+.breaking-intro.hidden      { display: none !important; }
+.breaking-intro.fade-out    { opacity: 0; pointer-events: none; }
+
+.breaking-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(45deg, rgba(255,30,30,0.25) 0%, transparent 60%),
+        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.04) 50px, rgba(255,255,255,0.04) 100px);
+    animation: scanlines 3.5s linear infinite;
+    opacity: 0.85;
+}
+
+.breaking-content {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+    padding: 40px 80px;
+    background: rgba(0,0,0,0.65);
+    border: 8px solid #ff3333;
+    border-radius: 8px;
+    box-shadow: 0 0 80px #ff0000;
+}
+
+.breaking-text {
+    display: block;
+    font-size: 11.5vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    background: linear-gradient(90deg, #ffffff, #ffd700, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    -webkit-text-stroke: 2px #000;
+    animation: metallicShine 1.8s linear infinite, introPop 4.2s ease-out forwards;
+    transform-style: preserve-3d;
+}
+
+.breaking-line {
+    height: 10px;
+    background: linear-gradient(90deg, transparent, #ff0000, #ffff00, #ff0000, transparent);
+    margin: 35px auto 0;
+    width: 85%;
+    box-shadow: 0 0 40px #ff0000;
+    animation: linePulse 1s ease-in-out infinite;
+}
+
+/* ==================== PROFESSIONAL NEWS TICKER (v4) ==================== */
+.ticker {
+    position: fixed;
+    left: 0; right: 0;
+    height: 76px;
+    display: flex;
+    align-items: stretch;
+    z-index: 99999;
+    overflow: hidden;
+    transform: translateZ(0);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.ticker.visible { opacity: 1; }
+.ticker.bottom  { bottom: 0; }
+.ticker.top     { top: 0; }
+
+/* Red broadcast label — CNN/Fox style */
+.ticker-label {
+    background: #cc0000;
+    color: #ffffff;
+    padding: 0 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 220px;
+    position: relative;
+    gap: 3px;
+    border-right: 4px solid #ff4444;
+}
+
+.ticker-label .live-dot {
+    width: 9px; height: 9px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    animation: pulse-dot 1.2s ease-in-out infinite;
+    box-shadow: 0 0 6px #fff;
+}
+
+.ticker-label .label-top {
+    font-size: 0.72rem;
+    letter-spacing: 4px;
+    opacity: 0.9;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.ticker-label .label-main {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+/* Dark scrolling band — white clean text */
+.ticker-content {
+    flex: 1;
+    overflow: hidden;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    border-top: 3px solid #cc0000;
+    border-bottom: 3px solid #cc0000;
+}
+
+.ticker-track {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker-scroll 35s linear infinite;
+    padding-left: 100%;
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* KEY: clean Arial, white, no shadows, no strokes — professional broadcast style */
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 0 12px;
+    letter-spacing: 0.4px;
+    line-height: 1;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Category pill before each headline */
+.ticker-item .tag {
+    background: #cc0000;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 4px 14px;
+    margin-right: 18px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* Separator between repeated items */
+.ticker-item .sep {
+    color: #cc0000;
+    font-size: 1.8rem;
+    margin: 0 35px;
+    line-height: 1;
+    opacity: 0.85;
+}
+
+.ticker:hover .ticker-track { animation-play-state: paused; }
+
+/* ==================== KEYFRAMES ==================== */
+@keyframes ticker-scroll {
+    0%   { transform: translateX(0) translateZ(0); }
+    100% { transform: translateX(-50%) translateZ(0); }
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.3; transform: scale(0.7); }
+}
+
+@keyframes metallicShine {
+    0%, 100% { filter: brightness(1.15) saturate(1.4); }
+    50%      { filter: brightness(2.3) saturate(2.1); }
+}
+
+@keyframes introPop {
+    0%   { transform: perspective(1400px) rotateX(35deg) rotateY(-25deg) scale(0.65); opacity: 0; }
+    25%  { transform: perspective(1400px) rotateX(12deg) rotateY(12deg) scale(1.08); opacity: 1; }
+    70%  { transform: perspective(1400px) rotateX(-8deg) rotateY(-8deg) scale(1); }
+    100% { transform: perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1); }
+}
+
+@keyframes scanlines {
+    0%   { background-position: 0 0; }
+    100% { background-position: 0 180px; }
+}
+
+@keyframes linePulse {
+    0%, 100% { opacity: 0.7; transform: scaleX(0.92); }
+    50%      { opacity: 1;   transform: scaleX(1.15); }
+}
