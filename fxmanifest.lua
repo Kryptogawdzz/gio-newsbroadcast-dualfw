@@ -4,7 +4,7 @@ lua54 'yes'
 
 author 'DevGio'
 description 'Gio Professional News Ticker - ESX & QBox Compatible'
-version '1.5.0'
+version '1.5.1'
 
 -- No hard dependency on either framework.
 -- The resource auto-detects ESX or QBox at runtime.
@@ -31,9 +31,4 @@ ui_page 'html/index.html'
 
 dependencies {
     'ox_lib'
-}
-
-escrow_ignore {
-  'config.lua',
-  'README.md'
 }

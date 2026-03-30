@@ -140,5 +140,3 @@ add_principal identifier.fivem:123456 group.admin
 For issues or questions, please contact via the store platform where this resource was purchased.
 
 ---
-
-*© gio-scripts — All rights reserved. Unauthorized redistribution or resale is prohibited.*
