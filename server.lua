@@ -58,6 +58,7 @@ local function GetPlayerJobData(source)
         local xPlayer = ESX.GetPlayerFromId(source)
         if not xPlayer then return nil, nil end
         local job = xPlayer.getJob()
+        if not job then return nil, nil end
         return job.name, job.grade
 
     elseif Framework == 'QBOX' and QBX then
@@ -136,8 +137,7 @@ RegisterCommand('announce', function(source, args)
             header    = cfg.header,
             subheader = cfg.subheader,
             color     = cfg.color,
-            message   = message,
-            type      = announceType
+            message   = message
         })
         print(string.format('^2[gio-newsbroadcast] ^7[CONSOLE] %s announcement: %s',
             announceType:upper(), message:gsub('%^[%d%*]', '')))
@@ -195,13 +195,14 @@ RegisterCommand('announce', function(source, args)
         header    = cfg.header,
         subheader = cfg.subheader,
         color     = cfg.color,
-        message   = message,
-        type      = announceType
+        message   = message
     })
 
-    -- Strip FiveM color codes from message before logging to prevent log spoofing
+    -- Strip FiveM color codes from name and message before logging to prevent log spoofing
     print(string.format('^2[gio-newsbroadcast] ^7[%s] %s announcement from %s: %s',
-        Framework, announceType:upper(), GetPlayerName(source), message:gsub('%^[%d%*]', '')))
+        Framework, announceType:upper(),
+        GetPlayerName(source):gsub('%^[%d%*]', ''),
+        message:gsub('%^[%d%*]', '')))
 end, false)
 
 -- ── /clearticker COMMAND ──────────────────────────────────────

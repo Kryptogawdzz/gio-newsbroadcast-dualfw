@@ -16,26 +16,31 @@ body {
 /* ==================== BREAKING NEWS INTRO ==================== */
 .breaking-intro {
     position: fixed;
-    inset: 0;
+    bottom: 88px;
+    left: 16px;
+    width: 380px;
     z-index: 100000;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at center, #4a0000, #000000);
+    background: radial-gradient(circle at center, #4a0000, #1a0000);
+    border-radius: 8px;
     overflow: hidden;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateZ(0);
+    will-change: opacity, transform;
+    animation: slideInCorner 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .breaking-intro.hidden      { display: none !important; }
-.breaking-intro.fade-out    { opacity: 0; pointer-events: none; }
+.breaking-intro.fade-out    { opacity: 0; pointer-events: none; transform: translateY(12px) translateZ(0); }
 
 .breaking-bg {
     position: absolute;
-    top: -180px; left: 0; right: 0; bottom: 0;
-    height: calc(100% + 180px);
+    inset: 0;
     background:
-        linear-gradient(45deg, rgba(255,30,30,0.25) 0%, transparent 60%),
-        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.04) 50px, rgba(255,255,255,0.04) 100px);
+        linear-gradient(45deg, rgba(255,30,30,0.22) 0%, transparent 60%),
+        repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.04) 30px, rgba(255,255,255,0.04) 60px);
     animation: scanlines 3.5s linear infinite;
     will-change: transform;
     opacity: 0.85;
@@ -45,16 +50,21 @@ body {
     position: relative;
     text-align: center;
     z-index: 2;
-    padding: 40px 80px;
+    width: 100%;
+    margin: 10px;
+    padding: 18px 28px;
     background: rgba(0,0,0,0.65);
-    border: 8px solid #ff3333;
-    border-radius: 8px;
-    box-shadow: 0 0 80px #ff0000;
+    border: 3px solid #ff3333;
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(255,0,0,0.6);
+    perspective: 1400px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .breaking-text {
     display: block;
-    font-size: 11.5vw;
+    font-size: 2rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 6px;
@@ -65,14 +75,16 @@ body {
     -webkit-text-stroke: 2px #000;
     animation: introPop 4.2s ease-out forwards;
     will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .breaking-line {
-    height: 10px;
+    height: 5px;
     background: linear-gradient(90deg, transparent, #ff0000, #ffff00, #ff0000, transparent);
-    margin: 35px auto 0;
+    margin: 12px auto 0;
     width: 85%;
-    box-shadow: 0 0 40px #ff0000;
+    box-shadow: 0 0 18px #ff0000;
     animation: linePulse 1s ease-in-out infinite;
 }
 
@@ -87,10 +99,11 @@ body {
     overflow: hidden;
     transform: translateZ(0);
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.5s ease;
 }
 
-.ticker.visible { opacity: 1; }
+.ticker.visible { opacity: 1; pointer-events: auto; }
 .ticker.bottom  { bottom: 0; }
 .ticker.top     { top: 0; }
 
@@ -201,9 +214,13 @@ body {
     opacity: 0.85;
 }
 
-.ticker:hover .ticker-track { animation-play-state: paused; }
 
 /* ==================== KEYFRAMES ==================== */
+@keyframes slideInCorner {
+    from { opacity: 0; transform: translateY(30px) scale(0.92) translateZ(0); }
+    to   { opacity: 1; transform: translateY(0)    scale(1)    translateZ(0); }
+}
+
 @keyframes ticker-scroll {
     0%   { transform: translateX(0) translateZ(0); }
     100% { transform: translateX(-50%) translateZ(0); }
@@ -215,10 +232,10 @@ body {
 }
 
 @keyframes introPop {
-    0%   { transform: perspective(1400px) rotateX(35deg) rotateY(-25deg) scale(0.65); opacity: 0; }
-    25%  { transform: perspective(1400px) rotateX(12deg) rotateY(12deg) scale(1.08); opacity: 1; }
-    70%  { transform: perspective(1400px) rotateX(-8deg) rotateY(-8deg) scale(1); }
-    100% { transform: perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1); }
+    0%   { transform: rotateX(35deg) rotateY(-25deg) scale(0.65); opacity: 0; }
+    25%  { transform: rotateX(12deg) rotateY(12deg)  scale(1.08); opacity: 1; }
+    70%  { transform: rotateX(-8deg) rotateY(-8deg)  scale(1); }
+    100% { transform: rotateX(0deg)  rotateY(0deg)   scale(1); }
 }
 
 @keyframes scanlines {
