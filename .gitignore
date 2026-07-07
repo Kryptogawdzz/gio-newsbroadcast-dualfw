@@ -1,0 +1,16 @@
+# Dependencies (rebuild with your package manager; not needed at runtime)
+node_modules/
+
+# Build tool caches
+.turbo/
+.vite/
+*.tsbuildinfo
+
+# Secrets / environment
+.env
+*.env
+
+# Logs & OS cruft
+*.log
+.DS_Store
+Thumbs.db

@@ -6,6 +6,8 @@ author 'DevGio'
 description 'Gio Professional News Ticker - ESX & QBox Compatible'
 version '1.5.1'
 
+server_script 'sv_version.lua'
+
 -- No hard dependency on either framework.
 -- The resource auto-detects ESX or QBox at runtime.
 
