@@ -30,35 +30,35 @@ Config = {}
 Config.AnnouncementTypes = {
     ['ambulance'] = {
         job       = 'ambulance',
-        grade     = 2,          -- Change: 0 = any EMS, 2 = supervisor+, 4 = chief only
+        grade     = 2, -- Change: 0 = any EMS, 2 = supervisor+, 4 = chief only
         header    = 'EMS NEWS',
         subheader = 'EMERGENCY MEDICAL SERVICES',
         color     = '#cc0000',
-        cooldown  = 30          -- seconds between broadcasts per player (0 = disabled)
+        cooldown  = 30 -- seconds between broadcasts per player (0 = disabled)
     },
     ['police'] = {
-        job       = 'police',   -- Change to match your server's job name
-        grade     = 3,          -- Change: 0 = any officer, 3 = sergeant+, 5 = command only
+        job       = 'police', -- Change to match your server's job name
+        grade     = 3,        -- Change: 0 = any officer, 3 = sergeant+, 5 = command only
         header    = 'PD NEWS',
-        subheader = 'LOS SANTOS POLICE DEPARTMENT',
+        subheader = 'PEACH CITY POLICE DEPARTMENT',
         color     = '#cc0000',
-        cooldown  = 30          -- seconds between broadcasts per player (0 = disabled)
+        cooldown  = 30 -- seconds between broadcasts per player (0 = disabled)
     },
     ['gov'] = {
         job       = 'gov',
-        grade     = 1,          -- Change: 0 = any gov employee, 1 = senior staff+
+        grade     = 1, -- Change: 0 = any gov employee, 1 = senior staff+
         header    = 'GOV NEWS',
         subheader = 'CITY GOVERNMENT',
         color     = '#cc0000',
-        cooldown  = 60          -- seconds between broadcasts per player (0 = disabled)
+        cooldown  = 60 -- seconds between broadcasts per player (0 = disabled)
     },
     ['event'] = {
-        job       = false,      -- false = no job required
-        grade     = 0,          -- ignored when job = false
+        job       = false, -- false = no job required
+        grade     = 0,     -- ignored when job = false
         header    = 'EVENT ALERT',
         subheader = 'SPECIAL BROADCAST',
         color     = '#cc0000',
-        cooldown  = 120,        -- seconds between broadcasts per player (0 = disabled)
+        cooldown  = 120, -- seconds between broadcasts per player (0 = disabled)
         -- ace    = 'gio-news.event'  -- Uncomment to restrict to ACE-permitted players only.
         --                              Add 'add_ace group.admin gio-news.event allow' in server.cfg.
     }
